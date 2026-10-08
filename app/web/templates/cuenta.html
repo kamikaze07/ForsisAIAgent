@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Mi cuenta · Forsis AI Agent{% endblock %}
+{% block content %}
+<section class="panel panel-estrecho">
+  <h1>Mi cuenta</h1>
+
+  <dl class="datos">
+    <dt>Usuario</dt><dd class="mono">{{ user.username }}</dd>
+    <dt>Nombre</dt><dd>{{ user.display_name }}</dd>
+    <dt>Rol en la interfaz</dt><dd>{{ user.role }}</dd>
+    <dt>Permisos del agente</dt>
+    <dd>{% if user.agent_roles %}{{ user.agent_roles|join(', ') }}{% else %}<em>ninguno asignado</em>{% endif %}</dd>
+    <dt>Identidad en los sistemas</dt>
+    <dd>
+      {% if user.traf_username or user.liq_nombre_usu %}
+        <span class="mono">{{ user.traf_username or user.liq_nombre_usu }}</span>
+      {% else %}
+        {# B-U8: sin mapeo las consultas de negocio se deniegan; se dice aquí
+           en lugar de dejar que el usuario lo deduzca de los rechazos. #}
+        <span class="aviso-warn">Sin mapear — las consultas de datos serán denegadas.
+        Pide a un administrador que vincule tu cuenta.</span>
+      {% endif %}
+    </dd>
+  </dl>
+
+  <h2>Cambiar contraseña</h2>
+  {% if user.must_change_password %}
+  <p class="aviso-warn" role="status">Debes cambiar tu contraseña inicial.</p>
+  {% endif %}
+  <form id="form-pass" autocomplete="on">
+    <label for="actual">Contraseña actual</label>
+    <input id="actual" type="password" required autocomplete="current-password">
+
+    <label for="nueva">Contraseña nueva</label>
+    <input id="nueva" type="password" required minlength="12" autocomplete="new-password">
+    <p class="ayuda">Mínimo 12 caracteres.</p>
+
+    <label for="nueva2">Repite la nueva</label>
+    <input id="nueva2" type="password" required minlength="12" autocomplete="new-password">
+
+    <p id="pass-msg" role="alert" hidden></p>
+    <button id="btn-pass" type="submit">Actualizar contraseña</button>
+  </form>
+  <p class="nota-pie">Al cambiar la contraseña se cerrarán tus demás sesiones.</p>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/static/ui/js/cuenta.js?v={{ v }}"></script>
+{% endblock %}

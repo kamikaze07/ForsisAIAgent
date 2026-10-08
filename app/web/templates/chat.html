@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Chat · Forsis AI Agent{% endblock %}
+{% block bodyclass %}pagina-chat{% endblock %}
+{% block content %}
+<section class="chat-wrap">
+
+  <div class="chat-barra">
+    <label for="sel-empresa">Empresa</label>
+    <!-- La empresa se elige ANTES de preguntar y queda fija durante el hilo:
+         cambiarla a media conversación haría que las respuestas anteriores
+         citaran datos de otra base sin que el historial lo refleje. -->
+    <select id="sel-empresa">
+      <option value="FORSIS">FORSIS</option>
+      <option value="GERO">GERO</option>
+    </select>
+    <span id="hilo-id" class="hilo-id" title="Identificador del hilo"></span>
+    <button id="btn-nuevo" type="button">Nueva conversación</button>
+  </div>
+
+  <!-- B-U8: aviso de cuenta sin identidad mapeada; se rellena desde /me -->
+  <p id="aviso-no-mapeado" class="aviso-warn" role="status" hidden></p>
+
+  <div id="transcripcion" class="transcripcion" aria-live="polite" aria-busy="false">
+    <div class="estado-vacio" id="estado-vacio">
+      <h2>¿Qué necesitas consultar?</h2>
+      <p>Puedes preguntar por guías, remisiones o liquidaciones.</p>
+      <ul class="sugerencias">
+        <li><button type="button" class="sug">¿Cuáles son las últimas 10 guías por timbrar?</button></li>
+        <li><button type="button" class="sug">Dame el detalle de la guía PR-228811</button></li>
+        <li><button type="button" class="sug">¿Qué puedes hacer?</button></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Estados 4/5: una sola región de progreso, reusada, con texto variable.
+       Un spinner por estado multiplicaría los nodos que hay que limpiar. -->
+  <div id="progreso" class="progreso" role="status" hidden>
+    <span class="spinner" aria-hidden="true"></span>
+    <span id="progreso-texto">Pensando…</span>
+    <button id="btn-cancelar" type="button" class="link">Cancelar</button>
+  </div>
+
+  <!-- Bitácora del turno en vuelo: las etapas que el stream SSE va emitiendo,
+       para que el usuario vea el avance y no solo un spinner. -->
+  <ol id="bitacora" class="bitacora" aria-live="polite" hidden></ol>
+
+  <form id="form-chat" class="compositor">
+    <label class="sr-only" for="mensaje">Mensaje</label>
+    <textarea id="mensaje" name="mensaje" rows="2" maxlength="4000"
+              placeholder="Escribe tu consulta… (Enter envía, Shift+Enter salta línea)"
+              required></textarea>
+    <button id="btn-enviar" type="submit">Enviar</button>
+  </form>
+  <p class="nota-pie">
+    Las respuestas provienen de los sistemas Forsis en modo sólo lectura.
+    Verifica los datos críticos en el sistema de origen.
+  </p>
+</section>
+
+<!-- Estado 9 (awaiting_confirmation): L2/L3. Diálogo modal nativo: el foco
+     queda atrapado y Esc cierra sin JS extra. Cancelar es la acción por
+     defecto para que un Enter accidental no ejecute una escritura. -->
+<dialog id="dlg-confirmar" class="dlg">
+  <form method="dialog">
+    <h2 id="dlg-titulo">Confirmar acción</h2>
+    <p id="dlg-resumen"></p>
+    <ul id="dlg-detalles" class="dlg-detalles"></ul>
+    <p class="dlg-riesgo">Esta acción modifica datos. Revisa antes de continuar.</p>
+    <menu class="dlg-acciones">
+      <button value="cancel" id="dlg-cancelar" autofocus>Cancelar</button>
+      <button value="confirm" id="dlg-confirmar" class="peligro">Sí, ejecutar</button>
+    </menu>
+  </form>
+</dialog>
+{% endblock %}
+{% block scripts %}
+<script src="/static/ui/js/chat.js?v={{ v }}"></script>
+{% endblock %}

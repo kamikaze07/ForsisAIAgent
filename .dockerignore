@@ -1,0 +1,73 @@
+# ==============================================================================
+# Forsis AI Agent — Exclusiones del contexto de build de Docker
+# Objetivo doble:
+#   1) Que NINGÚN secreto ni documentación interna entre en la imagen de runtime.
+#   2) Reducir el contexto de build (knowledge/ solo son ~764 KB de markdown de análisis).
+# ==============================================================================
+
+# --- Secretos: jamás en el contexto de build ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+
+# --- Documentación interna de análisis ---
+# Contiene hallazgos de seguridad de trafico-system / liquidaciones-system / Omniroute.
+# No se necesita en runtime; si Fase 2 la requiere para RAG se monta como volumen :ro.
+knowledge/
+README.md
+*.md
+!requirements.txt
+
+# --- Control de versiones ---
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# --- Artefactos de Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+*.egg-info/
+.eggs/
+dist/
+build/
+pip-wheel-metadata/
+
+# --- Caches de herramientas y tests ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+tests/
+
+# --- Logs y runtime ---
+*.log
+logs/
+storage/
+tmp/
+
+# --- Config que el runtime recibe por volumen/compose, no por imagen ---
+docker-compose.yml
+docker-compose.*.yml
+docker/nginx/
+docker/db/
+
+# --- Editor / SO ---
+.vscode/
+.idea/
+*.swp
+.DS_Store

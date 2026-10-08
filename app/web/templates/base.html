@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Forsis AI Agent{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/ui/css/base.css?v={{ v }}">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block bodyclass %}{% endblock %}">
+{% if user %}
+<header class="topbar">
+  <div class="topbar-brand">Forsis AI Agent</div>
+  <nav class="topbar-nav">
+    <a href="/ui/chat">Chat</a>
+    <a href="/ui/historial">Historial</a>
+    <a href="/ui/cuenta">Cuenta</a>
+    {% if user.is_admin and debug_enabled %}<a href="/ui/depuracion">Depuración</a>{% endif %}
+  </nav>
+  <div class="topbar-user">
+    <span>{{ user.display_name }} · {{ user.role }}</span>
+    <button id="btn-logout" type="button">Salir</button>
+  </div>
+</header>
+{% endif %}
+<main class="content">
+{% block content %}{% endblock %}
+</main>
+<footer class="footer">v{{ v }}</footer>
+{% if user %}
+{# El token CSRF viaja en <meta>, no en un <script> inline: la CSP usa
+   script-src 'self' (sin 'unsafe-inline'), asi que un script en linea que
+   defina window.__CSRF__ queda bloqueado y el header sale vacio.
+   <meta> no es ejecutable, por lo que la politica se mantiene intacta. #}
+<meta name="forsis-csrf" content="{{ csrf }}">
+<script src="/static/ui/js/app.js?v={{ v }}"></script>
+{% endif %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

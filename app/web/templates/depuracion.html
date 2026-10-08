@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Depuración · Forsis AI Agent{% endblock %}
+{% block content %}
+<section class="panel">
+  <h1>Depuración</h1>
+  <p class="aviso-warn">
+    Vista de administrador. Muestra el estado interno del agente y métricas del
+    proceso. No expone credenciales ni contenido de las bases de datos.
+  </p>
+
+  <h2>Salud del servicio</h2>
+  <dl class="datos" id="salud"><dd>Cargando…</dd></dl>
+
+  <h2>Capacidades registradas</h2>
+  <table class="tabla">
+    <caption class="sr-only">Capacidades del catálogo visibles para este rol</caption>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Riesgo</th>
+        <th scope="col">Categoría</th>
+      </tr>
+    </thead>
+    <tbody id="caps-body"></tbody>
+  </table>
+
+  <h2>Métricas</h2>
+  <pre class="bloque" id="metricas">Cargando…</pre>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/static/ui/js/depuracion.js?v={{ v }}"></script>
+{% endblock %}

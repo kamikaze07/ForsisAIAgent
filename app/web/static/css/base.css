@@ -1,0 +1,368 @@
+/* ===========================================================================
+   Forsis AI Agent — hoja de estilos de la UI standalone (§5.4)
+   
+   Sin framework y sin build: un archivo, propiedades personalizadas para el
+   tema y consultas de medios al final. El objetivo no es un sitio bonito sino
+   una herramienta legible durante turnos largos frente a la pantalla.
+   =========================================================================== */
+
+:root {
+  --c-fondo:        #f4f6f8;
+  --c-panel:        #ffffff;
+  --c-borde:        #d4dae0;
+  --c-texto:        #1b2733;
+  --c-texto-suave:  #5b6b7b;
+  --c-primario:     #10559a;
+  --c-primario-osc: #0b3f75;
+  --c-exito:        #1b7f4b;
+  --c-aviso:        #8a5a00;
+  --c-aviso-fondo:  #fff6e0;
+  --c-error:        #9b1c1c;
+  --c-error-fondo:  #fdeaea;
+  --r:              6px;
+  --sombra:         0 1px 3px rgba(16, 32, 48, .12);
+  --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--fuente);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--c-texto);
+  background: var(--c-fondo);
+}
+
+/* Accesibilidad: texto solo para lectores de pantalla. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* El foco visible nunca se elimina: se hace más claro. Un operador que navega
+   con teclado necesita saber dónde está. */
+:focus-visible {
+  outline: 3px solid var(--c-primario);
+  outline-offset: 2px;
+}
+
+a { color: var(--c-primario); }
+a:hover { color: var(--c-primario-osc); }
+
+.mono { font-family: var(--mono); font-size: .86em; color: var(--c-texto-suave); }
+
+/* --------------------------------------------------------------- barra */
+
+.topbar {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .55rem 1rem;
+  background: var(--c-panel);
+  border-bottom: 1px solid var(--c-borde);
+  box-shadow: var(--sombra);
+  position: sticky; top: 0; z-index: 10;
+  flex-wrap: wrap;
+}
+.topbar-brand { font-weight: 700; color: var(--c-primario); }
+.topbar-nav { display: flex; gap: .25rem; flex: 1; }
+.topbar-nav a {
+  padding: .35rem .7rem; border-radius: var(--r);
+  text-decoration: none; color: var(--c-texto);
+}
+.topbar-nav a:hover { background: var(--c-fondo); }
+.topbar-user {
+  display: flex; align-items: center; gap: .6rem;
+  font-size: .86rem; color: var(--c-texto-suave);
+}
+
+.content { max-width: 1040px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+.footer {
+  text-align: center; padding: .75rem;
+  font-size: .78rem; color: var(--c-texto-suave);
+}
+
+/* --------------------------------------------------------------- controles */
+
+button {
+  font: inherit; cursor: pointer;
+  padding: .45rem .9rem;
+  border: 1px solid var(--c-primario);
+  border-radius: var(--r);
+  background: var(--c-primario); color: #fff;
+}
+button:hover:not(:disabled) { background: var(--c-primario-osc); }
+/* El estado deshabilitado se ve deshabilitado: durante waiting_llm el usuario
+   debe entender que el botón no responde a propósito. */
+button:disabled { opacity: .55; cursor: not-allowed; }
+
+button.link, .link {
+  background: none; border: none; color: var(--c-primario);
+  padding: 0; text-decoration: underline;
+}
+button.peligro { background: var(--c-error); border-color: var(--c-error); }
+
+input, select, textarea {
+  font: inherit;
+  padding: .45rem .55rem;
+  border: 1px solid var(--c-borde);
+  border-radius: var(--r);
+  background: #fff; color: var(--c-texto);
+  max-width: 100%;
+}
+textarea { resize: vertical; }
+
+label { font-weight: 600; font-size: .88rem; display: block; margin: .6rem 0 .2rem; }
+.check { font-weight: 400; display: inline-flex; gap: .35rem; align-items: center; }
+.ayuda { font-size: .8rem; color: var(--c-texto-suave); margin: .2rem 0 0; }
+
+/* --------------------------------------------------------------- avisos */
+
+.aviso, .aviso-warn, .error {
+  padding: .6rem .8rem; border-radius: var(--r);
+  border: 1px solid var(--c-borde); background: var(--c-panel);
+  margin: .6rem 0; font-size: .9rem;
+}
+.aviso-warn {
+  background: var(--c-aviso-fondo);
+  border-color: #e8c97a; color: var(--c-aviso);
+}
+.error {
+  background: var(--c-error-fondo);
+  border-color: #e8a0a0; color: var(--c-error);
+}
+
+/* --------------------------------------------------------------- paneles */
+
+.panel {
+  background: var(--c-panel);
+  border: 1px solid var(--c-borde);
+  border-radius: var(--r);
+  padding: 1.25rem;
+  box-shadow: var(--sombra);
+}
+.panel-estrecho { max-width: 620px; margin: 0 auto; }
+.panel h1 { margin-top: 0; font-size: 1.3rem; }
+.panel h2 { font-size: 1.05rem; margin-top: 1.6rem; }
+
+.datos { display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1rem; }
+.datos dt { font-weight: 600; color: var(--c-texto-suave); }
+.datos dd { margin: 0; }
+
+.bloque {
+  background: #10161d; color: #d7e3ef;
+  padding: .8rem; border-radius: var(--r);
+  overflow-x: auto; font-family: var(--mono); font-size: .8rem;
+}
+
+/* --------------------------------------------------------------- login */
+
+.pagina-login .content { max-width: 400px; padding-top: 8vh; }
+.login-caja {
+  background: var(--c-panel);
+  border: 1px solid var(--c-borde);
+  border-radius: var(--r);
+  padding: 1.75rem;
+  box-shadow: var(--sombra);
+}
+.login-caja h1 { margin: 0 0 .25rem; font-size: 1.35rem; color: var(--c-primario); }
+.login-sub { margin: 0 0 1.25rem; font-size: .86rem; color: var(--c-texto-suave); }
+.login-caja input { width: 100%; }
+.login-caja button[type=submit] { width: 100%; margin-top: 1.1rem; padding: .55rem; }
+
+/* --------------------------------------------------------------- chat */
+
+.pagina-chat .content {
+  display: flex; flex-direction: column;
+  height: calc(100vh - 7.5rem);
+  max-width: 900px;
+}
+
+.chat-barra {
+  display: flex; align-items: center; gap: .6rem;
+  flex-wrap: wrap; margin-bottom: .6rem;
+}
+.chat-barra label { margin: 0; }
+.chat-barra .hilo-id {
+  font-family: var(--mono); font-size: .74rem;
+  color: var(--c-texto-suave); flex: 1;
+}
+
+.transcripcion {
+  flex: 1; overflow-y: auto;
+  background: var(--c-panel);
+  border: 1px solid var(--c-borde);
+  border-radius: var(--r);
+  padding: 1rem;
+  display: flex; flex-direction: column; gap: .85rem;
+}
+
+.estado-vacio { margin: auto; text-align: center; color: var(--c-texto-suave); }
+.estado-vacio h2 { font-size: 1.1rem; color: var(--c-texto); }
+.sugerencias { list-style: none; padding: 0; display: grid; gap: .4rem; }
+.sugerencias .sug {
+  background: var(--c-fondo); color: var(--c-texto);
+  border: 1px solid var(--c-borde); width: 100%;
+  text-align: left; font-size: .88rem;
+}
+
+.turno { display: flex; flex-direction: column; max-width: 86%; }
+.turno-user { align-self: flex-end; align-items: flex-end; }
+.turno-agent { align-self: flex-start; }
+
+.burbuja {
+  padding: .6rem .85rem; border-radius: 12px;
+  white-space: pre-wrap; word-wrap: break-word;
+}
+.turno-user .burbuja { background: var(--c-primario); color: #fff; border-bottom-right-radius: 3px; }
+.turno-agent .burbuja { background: var(--c-fondo); border: 1px solid var(--c-borde); border-bottom-left-radius: 3px; }
+.turno-agent.es-error .burbuja { background: var(--c-error-fondo); border-color: #e8a0a0; }
+.turno-agent.es-degradado .burbuja { background: var(--c-aviso-fondo); border-color: #e8c97a; }
+
+/* Citación de fuente (§3.4): siempre visible bajo la respuesta, nunca oculta
+   tras un clic. Una cifra sin su origen no es verificable. */
+.fuente {
+  font-size: .76rem; color: var(--c-texto-suave);
+  margin-top: .3rem; display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.fuente a { color: var(--c-texto-suave); }
+
+.tabla-datos { margin-top: .5rem; overflow-x: auto; }
+
+.progreso {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .5rem .2rem; font-size: .88rem; color: var(--c-texto-suave);
+}
+.progreso[hidden], [hidden] { display: none !important; }
+.spinner {
+  width: 14px; height: 14px; flex: none;
+  border: 2px solid var(--c-borde);
+  border-top-color: var(--c-primario);
+  border-radius: 50%;
+  animation: giro .7s linear infinite;
+}
+@keyframes giro { to { transform: rotate(360deg); } }
+
+.compositor { display: flex; gap: .5rem; align-items: flex-end; margin-top: .6rem; }
+.compositor textarea { flex: 1; }
+.nota-pie { font-size: .76rem; color: var(--c-texto-suave); margin: .4rem 0 0; }
+
+/* --------------------------------------------------------------- tablas */
+
+.tabla { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .88rem; }
+.tabla th, .tabla td {
+  text-align: left; padding: .45rem .6rem;
+  border-bottom: 1px solid var(--c-borde);
+}
+.tabla th { background: var(--c-fondo); font-size: .8rem; text-transform: uppercase; letter-spacing: .02em; }
+.tabla tbody tr:hover { background: #fafcfe; }
+
+/* Celdas numéricas: alineadas a la derecha y tabulares, para que los importes
+   se comparen columna a columna sin que los dígitos bailen de ancho. */
+.tabla th.num, .tabla td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------- componentes de respuesta */
+
+.componente {
+  margin-top: .7rem;
+  border: 1px solid var(--c-borde);
+  border-radius: var(--r);
+  background: var(--c-panel);
+  overflow: hidden;
+}
+.comp-titulo {
+  margin: 0;
+  padding: .5rem .7rem;
+  background: var(--c-fondo);
+  border-bottom: 1px solid var(--c-borde);
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--c-texto-suave);
+}
+.comp-nota {
+  margin: 0;
+  padding: .4rem .7rem;
+  font-size: .78rem;
+  color: var(--c-texto-suave);
+  border-top: 1px solid var(--c-borde);
+}
+.comp-tabla .tabla-datos { margin-top: 0; }
+.comp-tabla .tabla { margin-top: 0; }
+.comp-tabla .tabla th:first-child,
+.comp-tabla .tabla td:first-child { padding-left: .7rem; }
+.comp-tabla .tabla tbody tr:last-child td { border-bottom: none; }
+
+/* Card: pares etiqueta/valor en dos columnas, etiqueta angosta. */
+.comp-campos {
+  margin: 0;
+  padding: .5rem .7rem;
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) 1fr;
+  gap: .3rem .9rem;
+  font-size: .88rem;
+}
+.comp-campos dt { color: var(--c-texto-suave); }
+.comp-campos dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------ bitácora del turno */
+
+.bitacora {
+  list-style: none;
+  margin: .25rem 0 0;
+  padding: .5rem .75rem;
+  border-left: 2px solid var(--c-borde);
+  font-size: .82rem;
+  color: var(--c-texto-suave);
+}
+.bitacora li { padding: .12rem 0; }
+/* El paso en curso es el último: se destaca para distinguirlo del historial. */
+.bitacora li:last-child { color: var(--c-texto); font-weight: 500; }
+
+.pill {
+  display: inline-block; padding: .08rem .45rem;
+  border-radius: 999px; font-size: .74rem; font-weight: 600;
+}
+.pill-ok    { background: #e3f5ea; color: var(--c-exito); }
+.pill-error { background: var(--c-error-fondo); color: var(--c-error); }
+.pill-warn  { background: var(--c-aviso-fondo); color: var(--c-aviso); }
+
+.filtros { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: .4rem; }
+.paginacion { display: flex; gap: .75rem; align-items: center; margin-top: .9rem; font-size: .85rem; }
+
+.turnos { padding-left: 1.2rem; }
+.turnos li { margin-bottom: .7rem; }
+
+/* --------------------------------------------------------------- diálogo */
+
+.dlg {
+  border: 1px solid var(--c-borde); border-radius: var(--r);
+  padding: 1.25rem; max-width: 520px;
+  box-shadow: 0 8px 30px rgba(16, 32, 48, .25);
+}
+.dlg::backdrop { background: rgba(16, 32, 48, .45); }
+.dlg h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
+.dlg-detalles { font-size: .86rem; padding-left: 1.1rem; }
+.dlg-riesgo { font-size: .84rem; color: var(--c-aviso); font-weight: 600; }
+.dlg-acciones { display: flex; gap: .6rem; justify-content: flex-end; padding: 0; margin: 1rem 0 0; }
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 640px) {
+  .topbar { gap: .5rem; }
+  .topbar-user span { display: none; }
+  .turno { max-width: 100%; }
+  .datos { grid-template-columns: 1fr; gap: .1rem .5rem; }
+  .datos dd { margin-bottom: .5rem; }
+}
+
+/* Respeta la preferencia del sistema: las animaciones no son información. */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

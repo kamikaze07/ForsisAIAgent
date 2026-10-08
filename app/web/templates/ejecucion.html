@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Ejecución · Forsis AI Agent{% endblock %}
+{% block content %}
+<section class="panel">
+  <p><a href="/ui/historial" class="link">&larr; Volver al historial</a></p>
+  <h1>Traza de la conversación</h1>
+  <p class="mono" id="sid">{{ session_id }}</p>
+
+  <div id="ejec-estado" class="aviso" role="status">Cargando…</div>
+
+  <div id="ejec-cuerpo" hidden>
+    <h2>Turnos</h2>
+    <ol class="turnos" id="turnos"></ol>
+
+    <h2>Herramientas ejecutadas</h2>
+    <table class="tabla">
+      <caption class="sr-only">Ejecuciones de herramientas de este hilo</caption>
+      <thead>
+        <tr>
+          <th scope="col">Herramienta</th>
+          <th scope="col">Riesgo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Filas</th>
+          <th scope="col">Duración</th>
+        </tr>
+      </thead>
+      <tbody id="tools-body"></tbody>
+    </table>
+    <p class="nota-pie" id="sin-tools" hidden>Este hilo no ejecutó herramientas.</p>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/static/ui/js/ejecucion.js?v={{ v }}"></script>
+{% endblock %}

@@ -1,0 +1,53 @@
+# ==============================================================================
+# Forsis AI Agent — Dependencias Python 3.12
+# Versiones fijadas para reproducibilidad (actualizado 2026-10-05)
+# ==============================================================================
+
+# --- Framework Web ---
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.8.2
+pydantic-settings==2.3.4
+
+# --- Base de Datos ---
+# PostgreSQL (BD propia + forsis-memory)
+# DECISIÓN (ver architecture-python.md §9.2): un solo driver PostgreSQL.
+#   - asyncpg    = driver async, el único que usa la app (FastAPI es 100% async).
+#   - sqlalchemy = Core/ORM 2.0 en modo async (postgresql+asyncpg://).
+#   - alembic    = migraciones; corre sobre el MISMO engine async vía
+#                  `connection.run_sync()` en env.py (plantilla `alembic init -t async`).
+# psycopg2-binary ELIMINADO: era el driver sync redundante. Mantener dos drivers
+# obliga a dos DSN distintos y a dos pools para la misma BD, sin beneficio alguno.
+asyncpg==0.29.0
+sqlalchemy[asyncio]==2.0.31
+alembic==1.13.2
+
+# MySQL/MariaDB (lecturas read-only a SICRET en 192.168.1.209:3306)
+# IMPORTANTE: SICRET NO soporta TLS (--ssl=0), sicrePR es latin1
+pymysql==1.1.1
+cryptography==42.0.8
+
+# --- Cliente HTTP (para Omniroute + APIs REST de trafico-system) ---
+httpx==0.27.0
+
+# --- Observabilidad (opcional, para Fase 2) ---
+opentelemetry-api==1.25.0
+opentelemetry-sdk==1.25.0
+opentelemetry-instrumentation-fastapi==0.46b0
+
+# --- Utilidades ---
+python-dotenv==1.0.1
+python-multipart==0.0.9  # Para form data en FastAPI
+
+# Sprint 3: validación estricta de parámetros de tools contra params_schema
+jsonschema==4.23.0
+
+# --- Sprint 4: Interfaz web standalone ---
+# Hash de contraseñas de la UI. argon2id es el default de AGENT_UI_HASH_ALGO
+# (web-ui-design.md §6.1); argon2-cffi trae la implementación de referencia
+# con verificación en tiempo constante y rehash por parámetros obsoletos.
+argon2-cffi==23.1.0
+# Plantillas de las 7 páginas servidas por FastAPI (§5.3). Sin bundler ni Node.
+jinja2==3.1.4
+# Exportación XLSX de reportes (§10.2-6). CSV usa el módulo csv de la stdlib.
+openpyxl==3.1.5

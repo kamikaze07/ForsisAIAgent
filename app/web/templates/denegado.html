@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Sin acceso · Forsis AI Agent{% endblock %}
+{% block content %}
+<section class="panel panel-estrecho">
+  <h1>No tienes acceso a esta sección</h1>
+  <p>Tu rol actual (<strong>{{ user.role }}</strong>) no permite ver esta página.
+     Si crees que necesitas acceso, solicítalo a un administrador.</p>
+  <p><a href="/ui/chat" class="link">Volver al chat</a></p>
+</section>
+{% endblock %}

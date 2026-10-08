@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Historial · Forsis AI Agent{% endblock %}
+{% block content %}
+<section class="panel">
+  <h1>Historial de conversaciones</h1>
+
+  <div class="filtros">
+    <label for="f-empresa">Empresa</label>
+    <select id="f-empresa">
+      <option value="">Todas</option>
+      <option value="FORSIS">FORSIS</option>
+      <option value="GERO">GERO</option>
+    </select>
+
+    <label class="check"><input type="checkbox" id="f-errores"> Sólo con errores</label>
+
+    {% if user.is_admin %}
+    <!-- Sólo admin: ver hilos ajenos. Para el resto el control no se dibuja,
+         y el endpoint responde 403 aunque se fabrique la petición. -->
+    <label class="check"><input type="checkbox" id="f-todos"> Ver de todos los usuarios</label>
+    {% endif %}
+  </div>
+
+  <div id="hist-estado" class="aviso" role="status">Cargando…</div>
+
+  <table class="tabla" id="tabla-hist" hidden>
+    <caption class="sr-only">Conversaciones recientes</caption>
+    <thead>
+      <tr>
+        <th scope="col">Consulta</th>
+        <th scope="col">Empresa</th>
+        <th scope="col">Mensajes</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Última actividad</th>
+      </tr>
+    </thead>
+    <tbody id="hist-body"></tbody>
+  </table>
+
+  <div class="paginacion">
+    <button id="btn-prev" type="button" disabled>Anteriores</button>
+    <span id="pag-info"></span>
+    <button id="btn-next" type="button" disabled>Siguientes</button>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/static/ui/js/historial.js?v={{ v }}"></script>
+{% endblock %}
